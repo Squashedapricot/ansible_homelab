@@ -1,0 +1,20 @@
+# ansible_file
+---
+- name: Docker test
+  hosts: luckystar
+  become: true
+  tasks:
+
+    - name: Pull Docker Image
+      community.docker.docker_image:
+        name: ubuntu:20.04
+        source: pull
+        tag: latest
+
+    - name: Start Docker container
+      community.docker.docker_container:
+        name: bunty
+        image: ubuntu:20.04
+        state: started
+        detach: true
+        command: sleep infinity
