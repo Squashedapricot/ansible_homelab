@@ -1,0 +1,9 @@
+# ansible_file
+
+- name: My first play
+  hosts: luckystar
+  tasks:
+    - name: Install neofetch
+      ansible.builtin.package:
+        name: neofetch
+        state: present
