@@ -1,20 +1,37 @@
 # ansible_file
 ---
-- name: Docker test
-  hosts: luckystar
+- name: Test_play
   become: true
+  hosts: luckystar
   tasks:
 
-    - name: Pull Docker Image
-      community.docker.docker_image:
-        name: ubuntu:20.04
-        source: pull
-        tag: latest
+    - name: Update cache check for package avaliability
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: true
 
-    - name: Start Docker container
+    - name: Enable docker.service with systemctl
+      ansible.builtin.systemd_service:
+        state: started
+        name: docker.service
+        enabled: true
+
+    - name: Enable docker socket with systemctl
+      ansible.builtin.systemd_service:
+        state: started
+        name: docker.socket
+        enabled: true
+
+    - name: Pull docker alpine container
+      community.docker.docker_image_pull:
+        name: alpine:3.19
+        platform: amd64
+
+    - name: Run alpine container in detached
       community.docker.docker_container:
-        name: bunty
-        image: ubuntu:20.04
+        name: alpine-run
+        image: alpine:3.19
         state: started
         detach: true
         command: sleep infinity
