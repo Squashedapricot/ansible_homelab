@@ -1,0 +1,47 @@
+# ansible_file
+---
+- name: Install docker and setup a setup a docker container in detach mode
+  become: true
+  hosts: all
+  tasks:
+
+    - name: Update cache check and install docker for ubuntu 24.04
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - docker-compose
+          - docker-compose-v2
+        state: present
+        update_cache: true
+      when: ansible_distribution_major_version == "24"
+
+    - name: Add docker to apt using a script for ubuntu 22.04
+      ansible.builtin.script: docker_install.sh
+      args:
+        executable: bash
+      when: ansible_distribution_major_version == "22"
+
+    - name: Install docker
+      ansible.builtin.apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose
+        state: present
+        update_cache: true
+      when: ansible_distribution_major_version == "22"
+
+
+    - name: Enable docker.service with systemctl
+      ansible.builtin.systemd_service:
+        state: started
+        name: docker.service
+        enabled: true
+
+    - name: Enable docker socket with systemctl
+      ansible.builtin.systemd_service:
+        state: started
+        name: docker.socket
+        enabled: true

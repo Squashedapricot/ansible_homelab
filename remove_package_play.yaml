@@ -1,0 +1,7 @@
+# ansible_file
+---
+- name: Remove unused or conflicting packages
+  hosts: all
+  become: true
+  tasks:
+

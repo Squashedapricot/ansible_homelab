@@ -1,0 +1,9 @@
+# ansible_file
+---
+- name: Shutdwon systems
+  hosts: all
+  become: true
+  tasks:
+    - name: Shutdown all VMs
+      community.general.shutdown:
+        msg: "shutdown intiated by ansible"
