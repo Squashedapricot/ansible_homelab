@@ -1,0 +1,15 @@
+# ansible_file
+
+---
+- name: Test file creation with ansible
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Create folder DATA in root
+      ansible.builtin.file:
+        path: /DATA
+        state: directory
+        modification_time: now
+        access_time: now
+        mode: a+rwx

@@ -7,8 +7,27 @@ services:
     image: ghcr.io/ajnart/homarr:latest
     restart: unless-stopped
     volumes:
-      - ./homarr/configs:/app/data/configs
-      - ./homarr/icons:/app/public/icons
-      - ./homarr/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /DATA/homarr/configs:/app/data/configs
+      - /DATA/homarr/icons:/app/public/icons
+      - /DATA/homarr/data:/data
     ports:
       - '7575:7575'
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - /DATA/qbittorrent/appdata:/config
+      - /DATA/qbittorrent/downloads:/downloads
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped

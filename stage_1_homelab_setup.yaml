@@ -40,11 +40,19 @@
         name: docker.service
         enabled: true
 
-    - name: Enable docker socket with systemctl
+    - name: Enable docker.socket with systemctl
       ansible.builtin.systemd_service:
         state: started
         name: docker.socket
         enabled: true
+
+    - name: Create folder DATA in root
+      ansible.builtin.file:
+        path: /DATA
+        state: directory
+        modification_time: now
+        access_time: now
+        mode: a+rwx
 
     - name: Copy compose file
       ansible.builtin.copy:
@@ -55,7 +63,7 @@
         mode: a+rwx
       when: ansible_distribution_major_version == "24"
 
-    - name: Run the compose file
+    - name: Run the compose file for homarr and qbit(might take sometime)
       community.docker.docker_compose_v2:
         project_src: /home/kyo
       when: ansible_distribution_major_version == "24"
@@ -69,7 +77,7 @@
         mode: a+rwx
       when: ansible_distribution_major_version == "22"
 
-    - name: Run the compose file
+    - name: Run the compose file for homarr and qbit(might take sometime)
       community.docker.docker_compose:
         project_src: /home/kona
       when: ansible_distribution_major_version == "22"
